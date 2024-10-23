@@ -1,88 +1,92 @@
+/**
+ * CalcolatriceConMemoria
+ */
 import java.util.InputMismatchException;
 
 public class CalcolatriceConMemoria {
-//OVERVIEW: modella una calcolatrice con memoria alla quale è possibile applicare operazioni aritmetiche base.
+    //OVERVIEW: conserva uno stato di memoria ed applica al risultato in memoria operazioni 
+    //          algebriche base con un secondo operando dato con parametro
+//parametri
+private double mem = 0;
+///costruttori
+    public CalcolatriceConMemoria() {
+        //MODIFIES: this
+        //EFFECTS: inizializza la calcolatrice impostando lo stato di memoria iniziale a 0
+        this.mem = 0;
+    }
+    public CalcolatriceConMemoria(double mem) {
+        //MODIFIES: this
+        //EFFECTS: inizializza la calcolatrice impostando lo stato di memoria iniziale a mem
+        this.mem = mem;
+    }
+//metodi
+    public double getMem() {
+        //EFFECTS: restituisce il valore correntemente in memoria
+        return mem;
+    }
+    public double add(double op2) {
+        //MODIFIES mem
+        //EFFECTS: esegue la somma tra mem ed op2, restituendo in mem il valore dell'operazione
+        mem += op2;
+        return mem;
+    }
+    public double sub(double op2) {
+        //MODIFIES mem
+        //EFFECTS: esegue la differenza tra mem ed op2, restituendo in mem il valore dell'operazione
+        mem -= op2;
+        return mem;
+    }
+    public double mul(double op2) {
+        //MODIFIES mem
+        //EFFECTS: esegue il prodotto tra mem ed op2, restituendo in mem il valore dell'operazione
+        mem *= op2;
+        return mem;
+    }
+    public double div(double op2) throws DivideByZeroException {
+        //MODIFIES mem
+        //EFFECTS: esegue la divisione tra mem ed op2, restituendo in mem il valore dell'operazione
+        //         se op2 = 0 throws DivideByZeroException
+        if (op2 == 0) {
+            throw new DivideByZeroException("Divisione per 0, impossibile");
+        }
+        mem = mem/op2;
+        return mem;
+    }
+    public double operate(char operator, double op2) throws InputMismatchException {
+        //MODIFIES mem
+        //EFFECTS: esegue chiamando i metodi opportuni le operazioni di tipo operator, restituendo in mem il valore dell'operazione
+        //         se operator != [+-*/] throws InputMismatchException
+        switch(operator) {
+            case '+': {
+                add(op2);
+                break;
+            }
+            case '-': {
+                sub(op2);
+                break;
+            }
+            case '*': {
+                mul(op2);
+                break;
+            }
+            case '/': {
+                try {
+                    div(op2);
+                } catch (DivideByZeroException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            default: {
+                try {
+                } catch (InputMismatchException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+        }
+        return mem;
+    }
 
-	private double mem;
 
-//constructors
-	public CalcolatriceConMemoria() {
-	//MODIFIES: this
-	//EFFECTS: inizializza la calcolatrice impostando lo stato di memoria iniziale a 0
-
-		this.mem = 0;
-	}
-
-	public CalcolatriceConMemoria(double mem) {
-	// MODIFIES: this
-	// EFFECTS: inizializza la calcolatrice impostando lo stato di memoria iniziale a `mem`
-
-		this.mem = mem;
-	}
-
-//methods
-	public double getMem() {
-	//EFFECTS: restituisce il valore correntemente in memoria
-		return this.mem;
-	}
-
-	public double add(double op2) {
-	//MODIFIES: this
-	//EFFECTS: svolge l'operazione somma tra il valore in memoria e `op2`, impostando il valore in memoria al risultato dell'operazione
-
-		this.mem += op2;
-		return this.mem;
-	}
-
-	public double sub(double op2) {
-	//MODIFIES: this
-	//EFFECTS: svolge l'operazione differenza tra il valore in memoria e `op2`, impostando il valore in memoria al risultato dell'operazione
-
-		this.mem -= op2;
-		return this.mem;
-	}
-
-	public double mul(double op2) {
-	//MODIFIES: this
-	//EFFECTS: svolge l'operazione prodotto tra il valore in memoria e `op2`, impostando il valore in memoria al risultato dell'operazione
-
-		this.mem *= op2;
-		return this.mem;
-	}
-
-	public double div(double op2) throws DivideByZeroException {
-	//MODIFIES: this
-	//EFFECTS: svolge l'operazione divisione tra il valore in memoria e `op2`, impostando il valore in memoria al risultato dell'operazione.
-	//         Se `op2` è uguale a 0, il metodo lancia una `DivideByZeroException`
-
-		if(op2 == 0)
-			throw new DivideByZeroException("Non è possibile dividere per 0");
-
-		this.mem /= op2;
-		return this.mem;
-	}
-
-	public double operate(char operator, double op2) throws DivideByZeroException, InputMismatchException { //devo ancora includere la DivideByZeroException se non la gestisco qua
-	// MODIFIES: this
-	// EFFECTS: svolge l'operazione definita da `operator` tra il valore in memoria e `op2`, impostando il valore in memoria al risultato dell'operazione.
-	//          Se `operator è diverso da `+, `-`, `*` o `/`, il metodo lancia una `InputMismatchException`
-	//          Se `op2` è uguale a 0, il metodo lancia una `DivideByZeroException`
-
-		switch(operator) {
-			case '+':
-				this.add(op2); //riuso i metodi creati
-				return this.mem;
-			case '-':
-				this.sub(op2);
-				return this.mem;
-			case '*':
-				this.mul(op2);
-				return this.mem;
-			case '/':
-				this.div(op2); //questa operazione lancia una DivideByZeroException. Pertanto la devo o gestire, o rilanciare (modificando intestazione ed EFFECTS)
-				return this.mem;
-			default:
-				throw new InputMismatchException("Operatore non riconosciuto");
-		}
-	}
 }

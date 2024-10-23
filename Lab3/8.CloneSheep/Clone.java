@@ -1,54 +1,50 @@
-//Grazie a Nicola Montagnese per il codice
-
-import java.util.ArrayList;
-import java.util.InputMismatchException;
+/**
+ * Clone
+ */
 import java.util.Scanner;
-
+import java.util.ArrayList;
 public class Clone {
 
-	public static void main(String[] args) {
-	
-		String nome = args[0];
-		ArrayList<String> dna = new ArrayList<String>();
-		Sheep pecora;
-
-		Scanner s = new Scanner(System.in);
-		System.out.println("Inserisci i cromosomi, uno per riga (terminare con CTRL+D):");
-		while(s.hasNext())
-			dna.add(s.next());
-
-		try {
-			pecora = new Sheep(dna, nome);
-
-			System.out.println("Ho creato " + pecora);
-
-			Sheep clone = (Sheep) pecora.clone();
-			System.out.println("Ho creato un clone di " + clone);
-
-			if(pecora.equals(clone))
-				System.out.println("I due pokemon sono uguali");
-			else 
-				System.out.println("I due pokemon sono diversi... controlla nei box...");
-
-			Scanner t = new Scanner(System.in);
-			System.out.println("Inserisci il cromosoma da modificare ed il nuovo codice:");
-			int indice = Integer.parseInt(t.next());
-			String cromosoma = t.next();
-
-			try {
-				clone.sostituisciCromosoma(cromosoma, indice);
-			} catch (InputMismatchException i) {
-				System.out.println(i.getMessage());
-			}
-
-			System.out.println("Ho modificato " + clone);
-
-			if(pecora.equals(clone))
-				System.out.println("I due pokemon sono ancora uguali");
-			else
-				System.out.println("I due pokemon sono diversi... controlla nei box...");
-		} catch (NullPointerException | IllegalAccessError i) {
-			System.out.println(i.getMessage());
-		}
-	}
+    public static void main(String[] args) {
+        String nome = args[0];
+        ArrayList<String> dna = new ArrayList<String>();
+        Scanner s = new Scanner(System.in);
+        System.out.println("Inserisci i cromosomi, uno per riga (terminare con CTRL+D):");
+        while(s.hasNextLine()) {
+            dna.add(s.nextLine());
+        }
+        Sheep p1 = null;
+        try {
+             p1 = new Sheep(nome, dna);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+        System.out.println("Ho creato " + p1);
+        Sheep p2 = p1.clone();
+        System.out.println("Ho creato un clone di "+ p2);
+        if (p1.equals(p2)) {
+            System.out.println("le due pecore sono uguali");
+        } else {
+            System.out.println("Le due pecore sono diverse");
+        }
+        Scanner s2 = new Scanner(System.in);
+        System.out.println("Inserisci il cromosoma da modificare ed il nuovo codice:");
+        
+        int i = s2.nextInt();
+        String c = s2.next();
+        s.close();
+        s2.close();
+        try {
+            p2.replaceChromosome(i, c);
+            System.out.println("Ho modificato "+ p2);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        if (p1.equals(p2)) {
+            System.out.println("le due pecore sono uguali");
+        } else {
+            System.out.println("Le due pecore sono diverse");
+        }
+    }
 }
